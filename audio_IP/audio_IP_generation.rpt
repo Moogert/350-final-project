@@ -1,0 +1,29 @@
+Info: Starting: Create block symbol file (.bsf)
+Info: qsys-generate C:\Users\jsw51\Documents\audio_making\audio_IP.qsys --block-symbol-file --output-directory=C:\Users\jsw51\Documents\audio_making\audio_IP --family="Cyclone IV E" --part=EP4CE10E22A7
+Progress: Loading audio_making/audio_IP.qsys
+Progress: Reading input file
+Progress: Adding audio_0 [altera_up_avalon_audio 15.1]
+Progress: Parameterizing module audio_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: qsys-generate succeeded.
+Info: Finished: Create block symbol file (.bsf)
+Info: 
+Info: Starting: Create HDL design files for synthesis
+Info: qsys-generate C:\Users\jsw51\Documents\audio_making\audio_IP.qsys --synthesis=VERILOG --output-directory=C:\Users\jsw51\Documents\audio_making\audio_IP\synthesis --family="Cyclone IV E" --part=EP4CE10E22A7
+Progress: Loading audio_making/audio_IP.qsys
+Progress: Reading input file
+Progress: Adding audio_0 [altera_up_avalon_audio 15.1]
+Progress: Parameterizing module audio_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: audio_IP: Generating audio_IP "audio_IP" for QUARTUS_SYNTH
+Info: audio_0: Starting Generation of Audio Controller
+Info: audio_0: "audio_IP" instantiated altera_up_avalon_audio "audio_0"
+Info: audio_IP: Done "audio_IP" with 2 modules, 7 files
+Info: qsys-generate succeeded.
+Info: Finished: Create HDL design files for synthesis

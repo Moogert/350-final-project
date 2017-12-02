@@ -1,0 +1,29 @@
+Info: Starting: Create block symbol file (.bsf)
+Info: qsys-generate C:\Users\jsw51\Documents\audio_making\audio_config.qsys --block-symbol-file --output-directory=C:\Users\jsw51\Documents\audio_making\audio_config --family="Cyclone IV E" --part=EP4CE10E22A7
+Progress: Loading audio_making/audio_config.qsys
+Progress: Reading input file
+Progress: Adding audio_and_video_config_0 [altera_up_avalon_audio_and_video_config 15.1]
+Progress: Parameterizing module audio_and_video_config_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: qsys-generate succeeded.
+Info: Finished: Create block symbol file (.bsf)
+Info: 
+Info: Starting: Create HDL design files for synthesis
+Info: qsys-generate C:\Users\jsw51\Documents\audio_making\audio_config.qsys --synthesis=VERILOG --output-directory=C:\Users\jsw51\Documents\audio_making\audio_config\synthesis --family="Cyclone IV E" --part=EP4CE10E22A7
+Progress: Loading audio_making/audio_config.qsys
+Progress: Reading input file
+Progress: Adding audio_and_video_config_0 [altera_up_avalon_audio_and_video_config 15.1]
+Progress: Parameterizing module audio_and_video_config_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: audio_config: Generating audio_config "audio_config" for QUARTUS_SYNTH
+Info: audio_and_video_config_0: Starting Generation of Audio and Video Config
+Info: audio_and_video_config_0: "audio_config" instantiated altera_up_avalon_audio_and_video_config "audio_and_video_config_0"
+Info: audio_config: Done "audio_config" with 2 modules, 14 files
+Info: qsys-generate succeeded.
+Info: Finished: Create HDL design files for synthesis
