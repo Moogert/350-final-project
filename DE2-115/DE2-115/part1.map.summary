@@ -1,0 +1,14 @@
+Analysis & Synthesis Status : Successful - Sun Dec 03 20:45:26 2017
+Quartus Prime Version : 16.0.2 Build 222 07/20/2016 SJ Lite Edition
+Revision Name : part1
+Top-level Entity Name : clock_generator
+Family : Cyclone IV E
+Total logic elements : 0
+    Total combinational functions : 0
+    Dedicated logic registers : 0
+Total registers : 0
+Total pins : 3
+Total virtual pins : 0
+Total memory bits : 0
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 1

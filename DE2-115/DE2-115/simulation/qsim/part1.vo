@@ -1,0 +1,204 @@
+// Copyright (C) 1991-2016 Altera Corporation. All rights reserved.
+// Your use of Altera Corporation's design tools, logic functions 
+// and other software and tools, and its AMPP partner logic 
+// functions, and any output files from any of the foregoing 
+// (including device programming or simulation files), and any 
+// associated documentation or information are expressly subject 
+// to the terms and conditions of the Altera Program License 
+// Subscription Agreement, the Altera Quartus Prime License Agreement,
+// the Altera MegaCore Function License Agreement, or other 
+// applicable license agreement, including, without limitation, 
+// that your use is for the sole purpose of programming logic 
+// devices manufactured by Altera and sold by Altera or its 
+// authorized distributors.  Please refer to the applicable 
+// agreement for further details.
+
+// VENDOR "Altera"
+// PROGRAM "Quartus Prime"
+// VERSION "Version 16.0.0 Build 211 04/27/2016 SJ Standard Edition"
+
+// DATE "12/02/2017 00:32:32"
+
+// 
+// Device: Altera EP4CE115F29C7 Package FBGA780
+// 
+
+// 
+// This Verilog file should be used for ModelSim-Altera (Verilog) only
+// 
+
+`timescale 1 ps/ 1 ps
+
+module clock_generator (
+	CLOCK_27,
+	reset,
+	AUD_XCK);
+input 	CLOCK_27;
+input 	reset;
+output 	AUD_XCK;
+
+wire gnd;
+wire vcc;
+wire unknown;
+
+assign gnd = 1'b0;
+assign vcc = 1'b1;
+assign unknown = 1'bx;
+
+tri1 devclrn;
+tri1 devpor;
+tri1 devoe;
+wire \DE_Clock_Generator_Audio|pll~CLK1 ;
+wire \DE_Clock_Generator_Audio|pll~CLK2 ;
+wire \DE_Clock_Generator_Audio|pll~CLK3 ;
+wire \DE_Clock_Generator_Audio|pll~CLK4 ;
+wire \reset~input_o ;
+wire \CLOCK_27~input_o ;
+wire \DE_Clock_Generator_Audio|pll~FBOUT ;
+wire \DE_Clock_Generator_Audio|_clk0 ;
+
+wire [4:0] \DE_Clock_Generator_Audio|pll_CLK_bus ;
+
+assign \DE_Clock_Generator_Audio|_clk0  = \DE_Clock_Generator_Audio|pll_CLK_bus [0];
+assign \DE_Clock_Generator_Audio|pll~CLK1  = \DE_Clock_Generator_Audio|pll_CLK_bus [1];
+assign \DE_Clock_Generator_Audio|pll~CLK2  = \DE_Clock_Generator_Audio|pll_CLK_bus [2];
+assign \DE_Clock_Generator_Audio|pll~CLK3  = \DE_Clock_Generator_Audio|pll_CLK_bus [3];
+assign \DE_Clock_Generator_Audio|pll~CLK4  = \DE_Clock_Generator_Audio|pll_CLK_bus [4];
+
+cycloneive_io_obuf \AUD_XCK~output (
+	.i(\DE_Clock_Generator_Audio|_clk0 ),
+	.oe(vcc),
+	.seriesterminationcontrol(16'b0000000000000000),
+	.devoe(devoe),
+	.o(AUD_XCK),
+	.obar());
+// synopsys translate_off
+defparam \AUD_XCK~output .bus_hold = "false";
+defparam \AUD_XCK~output .open_drain_output = "false";
+// synopsys translate_on
+
+cycloneive_io_ibuf \CLOCK_27~input (
+	.i(CLOCK_27),
+	.ibar(gnd),
+	.o(\CLOCK_27~input_o ));
+// synopsys translate_off
+defparam \CLOCK_27~input .bus_hold = "false";
+defparam \CLOCK_27~input .simulate_z_as = "z";
+// synopsys translate_on
+
+cycloneive_pll \DE_Clock_Generator_Audio|pll (
+	.areset(gnd),
+	.pfdena(vcc),
+	.fbin(\DE_Clock_Generator_Audio|pll~FBOUT ),
+	.phaseupdown(gnd),
+	.phasestep(gnd),
+	.scandata(gnd),
+	.scanclk(gnd),
+	.scanclkena(vcc),
+	.configupdate(gnd),
+	.clkswitch(gnd),
+	.inclk({gnd,\CLOCK_27~input_o }),
+	.phasecounterselect(3'b000),
+	.phasedone(),
+	.scandataout(),
+	.scandone(),
+	.activeclock(),
+	.locked(),
+	.vcooverrange(),
+	.vcounderrange(),
+	.fbout(\DE_Clock_Generator_Audio|pll~FBOUT ),
+	.clk(\DE_Clock_Generator_Audio|pll_CLK_bus ),
+	.clkbad());
+// synopsys translate_off
+defparam \DE_Clock_Generator_Audio|pll .auto_settings = "false";
+defparam \DE_Clock_Generator_Audio|pll .bandwidth_type = "medium";
+defparam \DE_Clock_Generator_Audio|pll .c0_high = 16;
+defparam \DE_Clock_Generator_Audio|pll .c0_initial = 1;
+defparam \DE_Clock_Generator_Audio|pll .c0_low = 15;
+defparam \DE_Clock_Generator_Audio|pll .c0_mode = "odd";
+defparam \DE_Clock_Generator_Audio|pll .c0_ph = 0;
+defparam \DE_Clock_Generator_Audio|pll .c1_high = 0;
+defparam \DE_Clock_Generator_Audio|pll .c1_initial = 0;
+defparam \DE_Clock_Generator_Audio|pll .c1_low = 0;
+defparam \DE_Clock_Generator_Audio|pll .c1_mode = "bypass";
+defparam \DE_Clock_Generator_Audio|pll .c1_ph = 0;
+defparam \DE_Clock_Generator_Audio|pll .c1_use_casc_in = "off";
+defparam \DE_Clock_Generator_Audio|pll .c2_high = 0;
+defparam \DE_Clock_Generator_Audio|pll .c2_initial = 0;
+defparam \DE_Clock_Generator_Audio|pll .c2_low = 0;
+defparam \DE_Clock_Generator_Audio|pll .c2_mode = "bypass";
+defparam \DE_Clock_Generator_Audio|pll .c2_ph = 0;
+defparam \DE_Clock_Generator_Audio|pll .c2_use_casc_in = "off";
+defparam \DE_Clock_Generator_Audio|pll .c3_high = 0;
+defparam \DE_Clock_Generator_Audio|pll .c3_initial = 0;
+defparam \DE_Clock_Generator_Audio|pll .c3_low = 0;
+defparam \DE_Clock_Generator_Audio|pll .c3_mode = "bypass";
+defparam \DE_Clock_Generator_Audio|pll .c3_ph = 0;
+defparam \DE_Clock_Generator_Audio|pll .c3_use_casc_in = "off";
+defparam \DE_Clock_Generator_Audio|pll .c4_high = 0;
+defparam \DE_Clock_Generator_Audio|pll .c4_initial = 0;
+defparam \DE_Clock_Generator_Audio|pll .c4_low = 0;
+defparam \DE_Clock_Generator_Audio|pll .c4_mode = "bypass";
+defparam \DE_Clock_Generator_Audio|pll .c4_ph = 0;
+defparam \DE_Clock_Generator_Audio|pll .c4_use_casc_in = "off";
+defparam \DE_Clock_Generator_Audio|pll .charge_pump_current_bits = 1;
+defparam \DE_Clock_Generator_Audio|pll .clk0_counter = "c0";
+defparam \DE_Clock_Generator_Audio|pll .clk0_divide_by = 31;
+defparam \DE_Clock_Generator_Audio|pll .clk0_duty_cycle = 50;
+defparam \DE_Clock_Generator_Audio|pll .clk0_multiply_by = 14;
+defparam \DE_Clock_Generator_Audio|pll .clk0_phase_shift = "0";
+defparam \DE_Clock_Generator_Audio|pll .clk1_counter = "unused";
+defparam \DE_Clock_Generator_Audio|pll .clk1_divide_by = 0;
+defparam \DE_Clock_Generator_Audio|pll .clk1_duty_cycle = 50;
+defparam \DE_Clock_Generator_Audio|pll .clk1_multiply_by = 0;
+defparam \DE_Clock_Generator_Audio|pll .clk1_phase_shift = "0";
+defparam \DE_Clock_Generator_Audio|pll .clk2_counter = "unused";
+defparam \DE_Clock_Generator_Audio|pll .clk2_divide_by = 0;
+defparam \DE_Clock_Generator_Audio|pll .clk2_duty_cycle = 50;
+defparam \DE_Clock_Generator_Audio|pll .clk2_multiply_by = 0;
+defparam \DE_Clock_Generator_Audio|pll .clk2_phase_shift = "0";
+defparam \DE_Clock_Generator_Audio|pll .clk3_counter = "unused";
+defparam \DE_Clock_Generator_Audio|pll .clk3_divide_by = 0;
+defparam \DE_Clock_Generator_Audio|pll .clk3_duty_cycle = 50;
+defparam \DE_Clock_Generator_Audio|pll .clk3_multiply_by = 0;
+defparam \DE_Clock_Generator_Audio|pll .clk3_phase_shift = "0";
+defparam \DE_Clock_Generator_Audio|pll .clk4_counter = "unused";
+defparam \DE_Clock_Generator_Audio|pll .clk4_divide_by = 0;
+defparam \DE_Clock_Generator_Audio|pll .clk4_duty_cycle = 50;
+defparam \DE_Clock_Generator_Audio|pll .clk4_multiply_by = 0;
+defparam \DE_Clock_Generator_Audio|pll .clk4_phase_shift = "0";
+defparam \DE_Clock_Generator_Audio|pll .compensate_clock = "clock0";
+defparam \DE_Clock_Generator_Audio|pll .inclk0_input_frequency = 37037;
+defparam \DE_Clock_Generator_Audio|pll .inclk1_input_frequency = 0;
+defparam \DE_Clock_Generator_Audio|pll .loop_filter_c_bits = 0;
+defparam \DE_Clock_Generator_Audio|pll .loop_filter_r_bits = 27;
+defparam \DE_Clock_Generator_Audio|pll .m = 14;
+defparam \DE_Clock_Generator_Audio|pll .m_initial = 1;
+defparam \DE_Clock_Generator_Audio|pll .m_ph = 0;
+defparam \DE_Clock_Generator_Audio|pll .n = 1;
+defparam \DE_Clock_Generator_Audio|pll .operation_mode = "normal";
+defparam \DE_Clock_Generator_Audio|pll .pfd_max = 200000;
+defparam \DE_Clock_Generator_Audio|pll .pfd_min = 3076;
+defparam \DE_Clock_Generator_Audio|pll .self_reset_on_loss_lock = "off";
+defparam \DE_Clock_Generator_Audio|pll .simulation_type = "functional";
+defparam \DE_Clock_Generator_Audio|pll .switch_over_type = "manual";
+defparam \DE_Clock_Generator_Audio|pll .vco_center = 1538;
+defparam \DE_Clock_Generator_Audio|pll .vco_divide_by = 0;
+defparam \DE_Clock_Generator_Audio|pll .vco_frequency_control = "auto";
+defparam \DE_Clock_Generator_Audio|pll .vco_max = 3333;
+defparam \DE_Clock_Generator_Audio|pll .vco_min = 1538;
+defparam \DE_Clock_Generator_Audio|pll .vco_multiply_by = 0;
+defparam \DE_Clock_Generator_Audio|pll .vco_phase_shift_step = 330;
+defparam \DE_Clock_Generator_Audio|pll .vco_post_scale = 2;
+// synopsys translate_on
+
+cycloneive_io_ibuf \reset~input (
+	.i(reset),
+	.ibar(gnd),
+	.o(\reset~input_o ));
+// synopsys translate_off
+defparam \reset~input .bus_hold = "false";
+defparam \reset~input .simulate_z_as = "z";
+// synopsys translate_on
+
+endmodule

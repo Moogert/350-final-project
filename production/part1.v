@@ -1,0 +1,326 @@
+module part1(resetn, 
+	ps2_clock, ps2_data, 										// ps2 related I/O
+	debug_data_in, debug_addr, leds, 						// extra debugging ports
+	lcd_data, lcd_rw, lcd_en, lcd_rs, lcd_on, lcd_blon,// LCD info
+	seg1, seg2, seg3, seg4, seg5, seg6, seg7, seg8,		// seven segements
+	VGA_CLK,   														//	VGA Clock
+	VGA_HS,															//	VGA H_SYNC
+	VGA_VS,															//	VGA V_SYNC
+	VGA_BLANK,														//	VGA BLANK
+	VGA_SYNC,														//	VGA SYNC
+	VGA_R,   														//	VGA Red[9:0]
+	VGA_G,	 														//	VGA Green[9:0]
+	VGA_B,															//	VGA Blue[9:0]
+	CLOCK_50,
+	switch0, switch1, switch2, CLOCK2_50, KEY, I2C_SCLK, I2C_SDAT, AUD_XCK, 
+	AUD_DACLRCK, AUD_ADCLRCK, AUD_BCLK, AUD_ADCDAT, AUD_DACDAT); 
+	
+	
+	// from DE2-115: 
+	input CLOCK2_50;
+	input KEY;
+	// I2C Audio/Video config interface
+	output I2C_SCLK;
+	inout I2C_SDAT;
+	// Audio CODEC
+	output AUD_XCK;
+	input AUD_DACLRCK, AUD_ADCLRCK, AUD_BCLK;
+	input AUD_ADCDAT;
+	output AUD_DACDAT;
+	
+	wire sink_VALID, wink_EOP, source_VALID; 
+	assign source_VALID = go; // valid if we're writing 
+	assign sink_VALID = read_ready; 
+	assign sink_EOP = 1'b0; // no data, end of frame
+	wire [1:0] sink_ERROR; 
+	assign sink_ERROR = 2'b0; // we're assuming we have no errors ever 
+	wire [23:0] fft_real_wire, fft_imag_wire, fft_exp_wire; 
+	reg [23:0] fft_real, fft_imag, fft_exp; 
+	
+	
+	// Local wires.
+	wire read_ready, write_ready, read, write;
+	wire [23:0] readdata_left, readdata_right;
+	wire [23:0] writedata_left, writedata_right;
+	reg [5:0] source_EXP; 
+	wire reset = ~KEY;
+	reg source_ERROR; 
+	wire source_READY; 
+	assign source_READY = 1'b1; // we're always ready to read data from FFT.	
+	
+	wire go;
+	 assign go = write_ready; 
+	 
+	 // read changes samples, deletes the old one 
+	assign writedata_left = go ? readdata_left : 24'd0; // z or 0? 
+	assign writedata_right = go ? readdata_right : 24'd0; // ^^ 
+	assign read = read_ready; // if we can take more data, we should get more data  
+	assign write = write_ready; // derp 
+	reg [23:0] left_data; 
+	reg [23:0] right_data;
+	reg [23:0] mono; 
+	
+	always @(posedge AUD_XCK) begin // DEBUGMARK - *this may be the wrong clock*
+		left_data <= readdata_left; 
+		right_data <= readdata_right; 
+		fft_real <= fft_real_wire; 
+		fft_imag <= fft_imag_wire; 
+		mono <= (right_data + left_data) >>> 1; 
+		fft_exp <= fft_exp_wire; // store output values into a register @ every clock cycle 
+	end
+	
+/////////////////////////////////////////////////////////////////////////////////
+// Audio CODEC interface. 
+//
+// The interface consists of the following wires:
+// read_ready, write_ready - CODEC ready for read/write operation 
+// readdata_left, readdata_right - left and right channel data from the CODEC
+// read - send data from the CODEC (both channels)
+// writedata_left, writedata_right - left and right channel data to the CODEC
+// write - send data to the CODEC (both channels)
+// AUD_* - should connect to top-level entity I/O of the same name.
+//         These signals go directly to the Audio CODEC
+// I2C_* - should connect to top-level entity I/O of the same name.
+//         These signals go directly to the Audio/Video Config module
+/////////////////////////////////////////////////////////////////////////////////
+	clock_generator my_clock_gen(
+		// inputs
+		CLOCK2_50,
+		reset,
+
+		// outputs
+		AUD_XCK
+	);
+
+	audio_and_video_config cfg(
+		// Inputs
+		CLOCK_50,
+		reset,
+
+		// Bidirectionals
+		I2C_SDAT,
+		I2C_SCLK
+	);
+
+	audio_codec codec(
+		// Inputs
+		CLOCK_50,
+		reset,
+
+		read,	write,
+		writedata_left, writedata_right,
+
+		AUD_ADCDAT,
+
+		// Bidirectionals
+		AUD_BCLK, // assuming this to be the clock source we want 
+		AUD_ADCLRCK,
+		AUD_DACLRCK,
+
+		// Outputs
+		read_ready, write_ready,
+		readdata_left, readdata_right,
+		AUD_DACDAT
+	);
+	
+/*
+
+
+* which clock? 
+// big guns 
+	fft u0 (
+		.clk          (AUD_BCLK),          //    clk.clk
+		.reset_n      (reset),      //    rst.reset_n
+		.sink_valid   (<connected-to-sink_valid>),   //   sink.sink_valid
+		.sink_ready   (<connected-to-sink_ready>),   //       .sink_ready
+		.sink_error   (<connected-to-sink_error>),   //       .sink_error
+		.sink_sop     (<connected-to-sink_sop>),     //       .sink_sop
+		.sink_eop     (<connected-to-sink_eop>),     //       .sink_eop
+		.sink_real    (<connected-to-sink_real>),    //       .sink_real
+		.sink_imag    (24'd0),    //       .sink_imag
+		.inverse      (1'b0),      //       .inverse
+		.source_valid (source_VALID), // source.source_valid
+		.source_ready (<connected-to-source_ready>), //       .source_ready
+		.source_error (<connected-to-source_error>), //       .source_error
+		.source_sop   (<connected-to-source_sop>),   //       .source_sop
+		.source_eop   (<connected-to-source_eop>),   //       .source_eop
+		.source_real  (fft_real_wire),  //       .source_real
+		.source_imag  (fft_imag_wire),  //       .source_imag
+		.source_exp   (fft_exp_wire)    //       .source_exp
+	);
+
+
+*/
+	
+	
+	
+	
+	
+		
+	////////////////////////	VGA	////////////////////////////
+	output			VGA_CLK;   				//	VGA Clock
+	output			VGA_HS;					//	VGA H_SYNC
+	output			VGA_VS;					//	VGA V_SYNC
+	output			VGA_BLANK;				//	VGA BLANK
+	output			VGA_SYNC;				//	VGA SYNC
+	output	[7:0]	VGA_R;   				//	VGA Red[9:0]
+	output	[7:0]	VGA_G;	 				//	VGA Green[9:0]
+	output	[7:0]	VGA_B;   				//	VGA Blue[9:0]
+	input				CLOCK_50;
+	input switch0, switch1, switch2;
+
+	////////////////////////	PS2	////////////////////////////
+	input 			resetn;
+	inout 			ps2_data, ps2_clock;
+	
+	////////////////////////	LCD and Seven Segment	////////////////////////////
+	output 			   lcd_rw, lcd_en, lcd_rs, lcd_on, lcd_blon;
+	output 	[7:0] 	leds, lcd_data;
+	output 	[6:0] 	seg1, seg2, seg3, seg4, seg5, seg6, seg7, seg8;
+	output 	[31:0] 	debug_data_in;
+	output   [11:0]   debug_addr;
+	
+	
+	
+	
+	
+	wire			 clock;
+	wire			 lcd_write_en;
+	wire 	[31:0] lcd_write_data;
+	wire	[7:0]	 ps2_key_data;
+	wire			 ps2_key_pressed;
+	wire	[7:0]	 ps2_out;	
+	
+	// clock divider (by 5, i.e., 10 MHz)
+	pll div(CLOCK_50,inclock);
+	assign clock = CLOCK_50;
+	
+	// UNCOMMENT FOLLOWING LINE AND COMMENT ABOVE LINE TO RUN AT 50 MHz
+	//assign clock = inclock;
+	
+	// your processor
+	processor myprocessor(clock, ~resetn, /*ps2_key_pressed, ps2_out, lcd_write_en, lcd_write_data,*/ debug_data_in, debug_addr);
+	
+	// keyboard controller
+	PS2_Interface myps2(clock, resetn, ps2_clock, ps2_data, ps2_key_data, ps2_key_pressed, ps2_out);
+//	reg [7:0] ps2_out_mod;
+	wire [7:0] text;
+	wire a, b, c, d;
+	assign a = (ps2_out == 8'h1C);
+	assign b = (ps2_out == 8'h32);
+	assign c = (ps2_out == 8'h21);
+	assign d = (ps2_out == 8'h23);
+//	and and_a(a, ps2_out, 8'h1C);
+//	and and_b(b, ps2_out, 8'h32);
+//	and and_c(c, ps2_out, 8'h21);
+//	and and_d(d, ps2_out, 8'h23);
+	assign text = a ? 8'h61 : (b ? 8'h62 : (c ? 8'h63 : (d ? 8'h64 : 8'h65)));
+//	always @(posedge ps2_clock)
+//	begin
+//		if (ps2_out == 8'h1C)
+//		begin
+//			ps2_out_mod <= 8'h61; 
+//		end
+//		else if (ps2_out == 8'h32)
+//		begin
+//			ps2_out_mod <= 8'h62;
+//		end
+//		else if (ps2_out == 8'h21)
+//		begin
+//			ps2_out_mod <= 8'h63;
+//		end
+//		else if (ps2_out == 8'h23)
+//		begin
+//			ps2_out_mod <= 8'h64;
+//		end
+//		else
+//		begin
+//			ps2_out_mod <= ps2_out;
+//		end
+//	end
+//	assign text = ps2_out_mod;
+	
+	// lcd controller
+	lcd mylcd(clock, ~resetn, 1'b1, text, lcd_data, lcd_rw, lcd_en, lcd_rs, lcd_on, lcd_blon);
+	
+	// example for sending ps2 data to the first two seven segment displays
+	Hexadecimal_To_Seven_Segment hex1(ps2_out[3:0], seg1);
+	Hexadecimal_To_Seven_Segment hex2(ps2_out[7:4], seg2);
+	
+	// the other seven segment displays are currently set to 0
+	Hexadecimal_To_Seven_Segment hex3(4'b0, seg3);
+	Hexadecimal_To_Seven_Segment hex4(4'b0, seg4);
+	Hexadecimal_To_Seven_Segment hex5(4'b0, seg5);
+	Hexadecimal_To_Seven_Segment hex6(4'b0, seg6);
+	Hexadecimal_To_Seven_Segment hex7(4'b0, seg7);
+	Hexadecimal_To_Seven_Segment hex8(4'b0, seg8);
+	
+	// some LEDs that you could use for debugging if you wanted
+	assign leds = 8'b00101011;
+	
+	
+	
+	wire[17:0] amp, temptempamp; // strength of audio signal 
+	wire[8:0] tempamp;
+	up_counter counter1(tempamp, clock); // 
+	assign temptempamp = {9'b0,tempamp};
+	assign amp = temptempamp;
+	/*
+	wire amplitude = left_data + right_data >>> 2; // amplitude of audio 
+	// ** NOTE:  THIS EQUATION IS INCOMPLETE AND INSUFFICIENT!! *** 
+	// (...as regards smoothness...) 
+	*/
+	assign amp = mono[23:7]; 
+	
+	
+		reg[17:0] previous;
+	
+	wire isup, isdown;
+	assign isup = ((ps2_out[7:4] == 4'd7)&&(ps2_out[3:0] == 4'd5));
+	assign isdown = ((ps2_out[7:4] == 4'd7)&&(ps2_out[3:0] == 4'd2));
+	
+	
+	
+	// VGA
+	Reset_Delay			r0	(.iCLK(CLOCK_50),.oRESET(DLY_RST)	);
+	VGA_Audio_PLL 		p1	(.areset(~DLY_RST),.inclk0(CLOCK_50),.c0(VGA_CTRL_CLK),.c1(AUD_CTRL_CLK),.c2(VGA_CLK)	);
+	vga_controller vga_ins(.iRST_n(DLY_RST),
+								 .iVGA_CLK(VGA_CLK),
+								 .switch1(switch0),
+								 .switch2(switch1),
+								 .switch3(switch2),
+								 .oBLANK_n(VGA_BLANK),
+								 .oHS(VGA_HS),
+								 .oVS(VGA_VS),
+								 .b_data(VGA_B),
+								 .g_data(VGA_G),
+								 .r_data(VGA_R),
+								 .amplitude(amp),
+								 .color(8'd85));
+
+	always @ (posedge clock) previous = amp;
+	
+endmodule
+
+module up_counter(out,  // Output of the counter // enable for counter
+						clk  // clock Input
+						);
+ //----------Output Ports--------------
+      output [8:0] out;
+  //------------Input Ports--------------
+       input clk;
+  //------------Internal Variables--------
+      reg [8:0] out;
+  //-------------Code Starts Here-------
+  always @(posedge clk)
+  if (out == 9'd480 ) begin
+    out <= 9'b0 ;
+  end else begin
+    out <= out + 1;
+  end
+  
+  
+  endmodule 
+
+  
+ 

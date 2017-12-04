@@ -1,0 +1,12 @@
+Analysis & Synthesis Status : Failed - Sun Dec 03 20:49:08 2017
+Quartus Prime Version : 16.0.2 Build 222 07/20/2016 SJ Lite Edition
+Revision Name : toplevel
+Top-level Entity Name : toplevel
+Family : Cyclone V
+Logic utilization (in ALMs) : N/A until Partition Merge
+Total registers : N/A until Partition Merge
+Total pins : N/A until Partition Merge
+Total virtual pins : N/A until Partition Merge
+Total block memory bits : N/A until Partition Merge
+Total PLLs : N/A until Partition Merge
+Total DLLs : N/A until Partition Merge

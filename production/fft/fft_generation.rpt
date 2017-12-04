@@ -1,0 +1,34 @@
+Info: Starting: Create block symbol file (.bsf)
+Info: qsys-generate C:\Users\jsw51\Documents\GitHub\350-final-project\production\fft.qsys --block-symbol-file --output-directory=C:\Users\jsw51\Documents\GitHub\350-final-project\production\fft --family="Cyclone IV E" --part=EP4CE10E22A7
+Progress: Loading production/fft.qsys
+Progress: Reading input file
+Progress: Adding fft_ii_0 [altera_fft_ii 16.0]
+Progress: Parameterizing module fft_ii_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: qsys-generate succeeded.
+Info: Finished: Create block symbol file (.bsf)
+Info: 
+Info: Starting: Create HDL design files for synthesis
+Info: qsys-generate C:\Users\jsw51\Documents\GitHub\350-final-project\production\fft.qsys --synthesis=VERILOG --output-directory=C:\Users\jsw51\Documents\GitHub\350-final-project\production\fft\synthesis --family="Cyclone IV E" --part=EP4CE10E22A7
+Progress: Loading production/fft.qsys
+Progress: Reading input file
+Progress: Adding fft_ii_0 [altera_fft_ii 16.0]
+Progress: Parameterizing module fft_ii_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: fft: Generating fft "fft" for QUARTUS_SYNTH
+Info: fft_ii_0: --- add file: fft_fft_ii_0_2n64cos.hex
+Info: fft_ii_0: --- add file: fft_fft_ii_0_1n64sin.hex
+Info: fft_ii_0: --- add file: fft_fft_ii_0_2n64sin.hex
+Info: fft_ii_0: --- add file: fft_fft_ii_0_3n64cos.hex
+Info: fft_ii_0: --- add file: fft_fft_ii_0_3n64sin.hex
+Info: fft_ii_0: --- add file: fft_fft_ii_0_1n64cos.hex
+Info: fft_ii_0: "fft" instantiated altera_fft_ii "fft_ii_0"
+Info: fft: Done "fft" with 2 modules, 108 files
+Info: qsys-generate succeeded.
+Info: Finished: Create HDL design files for synthesis

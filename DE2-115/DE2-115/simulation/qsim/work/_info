@@ -1,0 +1,90 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/Student/jsw51/350-final-project/DE2-115/DE2-115/simulation/qsim
+vclock_generator
+Z1 !s110 1512192754
+!i10b 1
+!s100 5l>W5R7MOL^g<aQ4S[95M3
+IfofSbkbzNZYL5S0=j;WmA2
+Z2 VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1512192752
+Z3 8part1.vo
+Z4 Fpart1.vo
+Z5 L0 32
+Z6 OV;L;10.4d;61
+r1
+!s85 0
+31
+Z7 !s108 1512192754.000000
+Z8 !s107 part1.vo|
+Z9 !s90 -work|work|part1.vo|
+!i113 1
+Z10 o-work work
+vclock_generator_vlg_vec_tst
+R1
+!i10b 1
+!s100 >_Tg=IB3DQi_Jek[AXdL60
+IeekMVG1jR5EEC2zC^EU7K0
+R2
+R0
+w1512192749
+Z11 8clocks.vwf.vt
+Z12 Fclocks.vwf.vt
+Z13 L0 30
+R6
+r1
+!s85 0
+31
+R7
+!s107 clocks.vwf.vt|
+Z14 !s90 -work|work|clocks.vwf.vt|
+!i113 1
+R10
+vpart1
+Z15 !s110 1512192305
+!i10b 1
+!s100 K@3b`?Z50OLFRZ5lL17O91
+IF2obGSXN3J@RZW0_^QN7f2
+R2
+R0
+w1512192303
+R3
+R4
+R5
+R6
+r1
+!s85 0
+31
+Z16 !s108 1512192305.000000
+R8
+R9
+!i113 1
+R10
+vpart1_vlg_vec_tst
+R15
+!i10b 1
+!s100 6FiTdV5N9PZMN;e_kgf0Z3
+I3Xbie4l`E:2zEVG?Cl1701
+R2
+R0
+w1512192299
+R11
+R12
+R13
+R6
+r1
+!s85 0
+31
+R16
+!s107 clocks.vwf.vt|
+R14
+!i113 1
+R10
